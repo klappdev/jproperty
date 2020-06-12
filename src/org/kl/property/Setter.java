@@ -1,31 +1,26 @@
 package org.kl.property;
 
-public final class Property<T> {
+public final class Setter<T> {
 	private T value;
 	
-	public Property(T value) {
+	public Setter(T value) {
 		this.value = value;
 	}
 	
-	public Property<T> of(T value) {
-		return new Property<T>(value);
+	public Setter<T> of(T value) {
+		return new Setter<T>(value);
 	}
 	
 	public void set(T value) {
 		this.value = value;
-	}
-	
-	public T get() { 
-		return value; 
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		
+
 		result = prime * result + ((value == null) ? 0 : value.hashCode());
-		
 		return result;
 	}
 
@@ -44,7 +39,7 @@ public final class Property<T> {
 			return false;
 		}
 		
-		Property<T> other = (Property<T>) object;
+		Setter<T> other = (Setter<T>) object;
 		
 		if (value == null) {
 			if (other.value != null) {
@@ -59,6 +54,6 @@ public final class Property<T> {
 
 	@Override
 	public String toString() {
-		return "Property [value= " + value + "]";
+		return "Setter [value= " + value + "]";
 	}
 }
