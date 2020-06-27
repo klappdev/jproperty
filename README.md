@@ -1,7 +1,7 @@
 # jproperty
 This is simple Java library which emulate properties.
 
-Developers which create classes and want to use member instance classes 
+Developers which create classes and want to use members instance class 
 in another classes need use setters and getters.
 
 ```Java
@@ -60,4 +60,27 @@ Using this library developers can write more simple and without many lines code.
     }
 ```
 
+Also developers could override own setter, getter for members class.
+
+```Java
+    import org.kl.property.Property;
+    import org.kl.property.Getter;
+    import org.kl.property.Setter;
+
+    class Data {
+	public Property<Integer> id = Property.of(0)
+													 .set(value -> value * 2)
+													 .get(value -> value * 2);
+	public Getter<String> name = Getter.of("no_name")
+	                                   .get(value -> value.uppercase());
+	public Setter<Integer> age = Setter.of(1)
+	                                   .set(value -> {
+	                                   		if (value < 1) return 1;
+	                                   		return value;  
+	                                   });
+		
+	public Data() {}		
+    }	    
+```
+ 
 Requirements: Java 8 <br/>

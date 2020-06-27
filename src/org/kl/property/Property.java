@@ -1,7 +1,11 @@
 package org.kl.property;
 
+import java.util.function.UnaryOperator;
+
 public final class Property<T> {
 	private T value;
+	private UnaryOperator<T> setter;
+	private UnaryOperator<T> getter;
 	
 	public Property(T value) {
 		this.value = value;
@@ -12,11 +16,31 @@ public final class Property<T> {
 	}
 	
 	public void set(T value) {
-		this.value = value;
+		if (setter != null) {
+			this.value = setter.apply(value);
+		} else {
+			this.value = value;
+		}
 	}
 	
-	public T get() { 
+	public Property<T> set(UnaryOperator<T> setter) {
+		this.setter = setter;
+		
+		return this;
+	}
+	
+	public T get() {
+		if (getter != null) {
+			return getter.apply(value);
+		}
+		
 		return value; 
+	}
+	
+	public Property<T> get(UnaryOperator<T> getter) {
+		this.getter = getter;
+		
+		return this;
 	}
 
 	@Override

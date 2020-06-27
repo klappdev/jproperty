@@ -1,7 +1,10 @@
 package org.kl.property;
 
+import java.util.function.UnaryOperator;
+
 public final class Getter<T> {
 	private final T value;
+	private UnaryOperator<T> getter;
 	
 	public Getter(T value) {
 		this.value = value;
@@ -11,8 +14,18 @@ public final class Getter<T> {
 		return new Getter<T>(value);
 	}
 	
-	public T get() { 
+	public T get() {
+		if (getter != null) {
+			return getter.apply(value);
+		}
+		
 		return value; 
+	}
+	
+	public Getter<T> get(UnaryOperator<T> getter) {
+		this.getter = getter;
+		
+		return this;
 	}
 	
 	@Override
