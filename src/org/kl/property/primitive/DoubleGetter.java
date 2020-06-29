@@ -1,7 +1,10 @@
 package org.kl.property.primitive;
 
+import java.util.function.DoubleUnaryOperator;
+
 public final class DoubleGetter {
 	private final double value;
+	private DoubleUnaryOperator getter;
 	
 	public DoubleGetter(double value) {
 		this.value = value;
@@ -11,8 +14,18 @@ public final class DoubleGetter {
 		return new DoubleGetter(value);
 	}
 	
-	public double get() { 
+	public double get() {
+		if (getter != null) {
+			return getter.applyAsDouble(value);
+		}
+		
 		return value; 
+	}
+	
+	public DoubleGetter get(DoubleUnaryOperator getter) {
+		this.getter = getter;
+		
+		return this;
 	}
 
 	@Override

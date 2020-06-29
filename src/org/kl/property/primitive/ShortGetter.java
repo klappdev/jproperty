@@ -1,7 +1,10 @@
 package org.kl.property.primitive;
 
+import org.kl.property.lambda.ShortUnaryOperator;
+
 public final class ShortGetter {
 	private final short value;
+	private ShortUnaryOperator getter;
 	
 	public ShortGetter(short value) {
 		this.value = value;
@@ -12,8 +15,19 @@ public final class ShortGetter {
 	}
 	
 	public short get() { 
+		if (getter != null) {
+			return getter.applyAsShort(value);
+		}
+		
 		return value; 
 	}
+		
+	public ShortGetter get(ShortUnaryOperator getter) {
+		this.getter = getter;
+		
+		return this;
+	}
+		
 	
 	@Override
 	public int hashCode() {

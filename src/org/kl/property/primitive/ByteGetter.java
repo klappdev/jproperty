@@ -1,7 +1,10 @@
 package org.kl.property.primitive;
 
+import org.kl.property.lambda.ByteUnaryOperator;
+
 public final class ByteGetter {
 	private final byte value;
+	private ByteUnaryOperator getter;
 	
 	public ByteGetter(byte value) {
 		this.value = value;
@@ -11,8 +14,18 @@ public final class ByteGetter {
 		return new ByteGetter(value);
 	}
 	
-	public byte get() { 
+	public byte get() {
+		if (getter != null) {
+			return getter.applyAsByte(value);
+		}
+		
 		return value; 
+	}
+	
+	public ByteGetter get(ByteUnaryOperator getter) {
+		this.getter = getter;
+		
+		return this;
 	}
 	
 	@Override

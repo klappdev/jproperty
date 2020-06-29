@@ -1,7 +1,10 @@
 package org.kl.property.primitive;
 
+import java.util.function.LongUnaryOperator;
+
 public final class LongGetter {
 	private final long value;
+	private LongUnaryOperator getter;
 	
 	public LongGetter(long value) {
 		this.value = value;
@@ -11,8 +14,18 @@ public final class LongGetter {
 		return new LongGetter(value);
 	}
 	
-	public long get() { 
+	public long get() {
+		if (getter != null) {
+			return getter.applyAsLong(value);
+		}
+		
 		return value; 
+	}
+	
+	public LongGetter get(LongUnaryOperator getter) {
+		this.getter = getter;
+		
+		return this;
 	}
 	
 	@Override

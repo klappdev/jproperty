@@ -1,7 +1,10 @@
 package org.kl.property.primitive;
 
+import org.kl.property.lambda.CharUnaryOperator;
+
 public final class CharGetter {
 	private final char value;
+	private CharUnaryOperator getter;
 	
 	public CharGetter(char value) {
 		this.value = value;
@@ -11,8 +14,18 @@ public final class CharGetter {
 		return new CharGetter(value);
 	}
 	
-	public char get() { 
+	public char get() {
+		if (getter != null) {
+			return getter.applyAsChar(value);
+		}
+		
 		return value; 
+	}
+	
+	public CharGetter get(CharUnaryOperator getter) {
+		this.getter = getter;
+		
+		return this;
 	}
 
 	@Override

@@ -1,7 +1,11 @@
 package org.kl.property.primitive;
 
+import org.kl.property.lambda.BoolUnaryOperator;
+
 public final class BoolGetter {
 	private final boolean value;
+	private BoolUnaryOperator getter;
+	
 	
 	public BoolGetter(boolean value) {
 		this.value = value;
@@ -12,7 +16,17 @@ public final class BoolGetter {
 	}
 	
 	public boolean get() { 
+		if (getter != null) {
+			return getter.applyAsBool(value);
+		}
+		
 		return value; 
+	}
+
+	public BoolGetter get(BoolUnaryOperator getter) {
+		this.getter = getter;
+		
+		return this;
 	}
 
 	@Override

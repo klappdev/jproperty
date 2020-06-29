@@ -1,7 +1,10 @@
 package org.kl.property.primitive;
 
+import org.kl.property.lambda.FloatUnaryOperator;
+
 public final class FloatGetter {
 	private final float value;
+	private FloatUnaryOperator getter;
 	
 	public FloatGetter(float value) {
 		this.value = value;
@@ -11,10 +14,20 @@ public final class FloatGetter {
 		return new FloatGetter(value);
 	}
 	
-	public float get() { 
+	public float get() {
+		if (getter != null) {
+			return getter.applyAsFloat(value);
+		}
+		
 		return value; 
 	}
-
+	
+	public FloatGetter get(FloatUnaryOperator getter) {
+		this.getter = getter;
+		
+		return this;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
