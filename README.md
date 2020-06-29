@@ -5,26 +5,26 @@ Developers which create classes and want to use members instance class
 in another classes need use setters and getters.
 
 ```Java
-    class Point {
+   public class Point {
 	private int x;
 	private int y;
 		
 	public Point() {}
 		
 	public void setX(int x) {
-		this.x = x;
+	     this.x = x;
 	}
 		
 	public void setY(int y) {
-		this.y = y;
+	     this.y = y;
 	}
 		
 	public int getX() {
-		return x;
+	     return x;
 	}
 		
 	public int getY() {
-		return y;
+	     return y;
 	}
 		
 	// equals, hashcode, toString
@@ -44,7 +44,7 @@ Using this library developers can write more simple and without many lines code.
 ```Java
     import org.kl.property.Property;
 
-    class Point {
+    public class Point {
 	public Property<Integer> x = Property.of(0);
 	public Property<Integer> y = Property.of(0);
 		
@@ -63,20 +63,20 @@ Using this library developers can write more simple and without many lines code.
 Also developers could override own setter, getter for members class.
 
 ```Java
-    import org.kl.property.Property;
-    import org.kl.property.Getter;
-    import org.kl.property.Setter;
+   import org.kl.property.Property;
+   import org.kl.property.Getter;
+   import org.kl.property.Setter;
 
-    class Data {
+   public class Data {
 	public Property<Integer> id = Property.of(0)
-													 .set(value -> value * 2)
-													 .get(value -> value * 2);
+					      .set(value -> value * 2)
+					      .get(value -> value * 2);
 	public Getter<String> name = Getter.of("no_name")
 	                                   .get(value -> value.uppercase());
 	public Setter<Integer> age = Setter.of(1)
 	                                   .set(value -> {
-	                                   		if (value < 1) return 1;
-	                                   		return value;  
+	                                   	if (value < 1) return 1;
+	                                   	return value;  
 	                                   });
 		
 	public Data() {}		
