@@ -1,7 +1,10 @@
 package org.kl.property.primitive;
 
+import org.kl.property.lambda.CharUnaryOperator;
+
 public final class CharSetter {
 	private char value;
+	private CharUnaryOperator setter;
 	
 	public CharSetter(char value) {
 		this.value = value;
@@ -12,7 +15,18 @@ public final class CharSetter {
 	}
 	
 	public void set(char value) {
+		if (setter != null) {
+			setter.applyAsChar(value);
+			return;
+		}
+		
 		this.value = value;
+	}
+	
+	public CharSetter set(CharUnaryOperator setter) {
+		this.setter = setter;
+		
+		return this;
 	}
 
 	@Override

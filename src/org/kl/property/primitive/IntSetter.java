@@ -1,7 +1,10 @@
 package org.kl.property.primitive;
 
+import java.util.function.IntUnaryOperator;
+
 public final class IntSetter {
 	private int value;
+	private IntUnaryOperator setter;
 	
 	public IntSetter(int value) {
 		this.value = value;
@@ -12,7 +15,18 @@ public final class IntSetter {
 	}
 	
 	public void set(int value) {
+		if (setter != null) {
+			setter.applyAsInt(value);
+			return;
+		}
+		
 		this.value = value;
+	}
+	
+	public IntSetter set(IntUnaryOperator setter) {
+		this.setter = setter;
+		
+		return this;
 	}
 
 	@Override

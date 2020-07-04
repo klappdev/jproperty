@@ -1,7 +1,10 @@
 package org.kl.property.primitive;
 
+import java.util.function.DoubleUnaryOperator;
+
 public final class DoubleSetter {
 	private double value;
+	private DoubleUnaryOperator setter;
 	
 	public DoubleSetter(double value) {
 		this.value = value;
@@ -12,7 +15,18 @@ public final class DoubleSetter {
 	}
 	
 	public void set(double value) {
+		if (setter != null) {
+			setter.applyAsDouble(value);
+			return;
+		}
+		
 		this.value = value;
+	}
+	
+	public DoubleSetter set(DoubleUnaryOperator setter) {
+		this.setter = setter;
+		
+		return this;
 	}
 
 	@Override

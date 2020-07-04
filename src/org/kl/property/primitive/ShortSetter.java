@@ -1,7 +1,10 @@
 package org.kl.property.primitive;
 
+import org.kl.property.lambda.ShortUnaryOperator;
+
 public final class ShortSetter {
 	private short value;
+	private ShortUnaryOperator setter;
 	
 	public ShortSetter(short value) {
 		this.value = value;
@@ -12,7 +15,18 @@ public final class ShortSetter {
 	}
 	
 	public void set(short value) {
+		if (setter != null) {
+			setter.applyAsShort(value);
+			return;
+		}
+		
 		this.value = value;
+	}
+	
+	public ShortSetter set(ShortUnaryOperator setter) {
+		this.setter = setter;
+		
+		return this;
 	}
 
 	@Override

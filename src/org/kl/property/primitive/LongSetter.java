@@ -1,7 +1,10 @@
 package org.kl.property.primitive;
 
+import java.util.function.LongUnaryOperator;
+
 public final class LongSetter {
 	private long value;
+	private LongUnaryOperator setter;
 	
 	public LongSetter(long value) {
 		this.value = value;
@@ -12,7 +15,18 @@ public final class LongSetter {
 	}
 	
 	public void set(long value) {
+		if (setter != null) {
+			setter.applyAsLong(value);
+			return;
+		}
+		
 		this.value = value;
+	}
+	
+	public LongSetter set(LongUnaryOperator setter) {
+		this.setter = setter;
+		
+		return this;
 	}
 
 	@Override

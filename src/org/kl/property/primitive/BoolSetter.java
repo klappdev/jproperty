@@ -1,7 +1,10 @@
 package org.kl.property.primitive;
 
+import org.kl.property.lambda.BoolUnaryOperator;
+
 public final class BoolSetter {
 	private boolean value;
+	private BoolUnaryOperator setter;
 	
 	public BoolSetter(boolean value) {
 		this.value = value;
@@ -12,7 +15,18 @@ public final class BoolSetter {
 	}
 	
 	public void set(boolean value) {
+		if (setter != null) {
+			setter.applyAsBool(value);
+			return;
+		}
+		
 		this.value = value;
+	}
+	
+	public BoolSetter set(BoolUnaryOperator setter) {
+		this.setter = setter;
+		
+		return this;
 	}
 
 	@Override

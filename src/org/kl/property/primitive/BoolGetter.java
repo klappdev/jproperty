@@ -6,7 +6,6 @@ public final class BoolGetter {
 	private final boolean value;
 	private BoolUnaryOperator getter;
 	
-	
 	public BoolGetter(boolean value) {
 		this.value = value;
 	}

@@ -1,7 +1,10 @@
 package org.kl.property.primitive;
 
+import org.kl.property.lambda.FloatUnaryOperator;
+
 public final class FloatSetter {
 	private float value;
+	private FloatUnaryOperator setter;
 	
 	public FloatSetter(float value) {
 		this.value = value;
@@ -12,7 +15,18 @@ public final class FloatSetter {
 	}
 	
 	public void set(float value) {
+		if (setter != null) {
+			setter.applyAsFloat(value);
+			return;
+		}
+		
 		this.value = value;
+	}
+	
+	public FloatSetter set(FloatUnaryOperator setter) {
+		this.setter = setter;
+		
+		return this;
 	}
 
 	@Override
