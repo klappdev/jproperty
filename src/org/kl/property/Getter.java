@@ -1,10 +1,15 @@
 package org.kl.property;
 
+import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
+
+import org.kl.property.error.PropertyException;
 
 public final class Getter<T> {
 	private final T value;
 	private UnaryOperator<T> getter;
+	private Predicate<T> preCondition;
+	private Predicate<T> postCondition;
 	
 	public Getter(T value) {
 		this.value = value;
@@ -15,15 +20,40 @@ public final class Getter<T> {
 	}
 	
 	public T get() {
-		if (getter != null) {
-			return getter.apply(value);
+		T result;
+		
+		if (preCondition != null && !preCondition.test(value)) {
+			throw new PropertyException("Preconditions not satisfied in getter");
 		}
 		
-		return value; 
+		if (getter != null) {
+			result = getter.apply(value);
+		} else {
+			result = value;
+		}
+		
+		
+		if (postCondition != null && !postCondition.test(this.value)) {
+			throw new PropertyException("Postconditions not satisfied in getter");
+		}
+		
+		return result; 
 	}
 	
 	public Getter<T> get(UnaryOperator<T> getter) {
 		this.getter = getter;
+		
+		return this;
+	}
+	
+	public Getter<T> pre(Predicate<T> preCondition) {
+		this.preCondition = preCondition;
+		
+		return this;
+	}
+	
+	public Getter<T> post(Predicate<T> postCondition) {
+		this.postCondition = postCondition;
 		
 		return this;
 	}

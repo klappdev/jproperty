@@ -1,10 +1,15 @@
 package org.kl.property;
 
+import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
+
+import org.kl.property.error.PropertyException;
 
 public final class Setter<T> {
 	private T value;
 	private UnaryOperator<T> setter;
+	private Predicate<T> preCondition;
+	private Predicate<T> postCondition;
 	
 	public Setter(T value) {
 		this.value = value;
@@ -15,15 +20,35 @@ public final class Setter<T> {
 	}
 	
 	public void set(T value) {
+		if (preCondition != null && !preCondition.test(value)) {
+			throw new PropertyException("Preconditions not satisfied in setter");
+		}
+		
 		if (setter != null) {
 			this.value = setter.apply(value);
 		} else {
 			this.value = value;
 		}
+		
+		if (postCondition != null && !postCondition.test(this.value)) {
+			throw new PropertyException("Postconditions not satisfied in setter");
+		}
 	}
 	
 	public Setter<T> set(UnaryOperator<T> setter) {
 		this.setter = setter;
+		
+		return this;
+	}
+	
+	public Setter<T> pre(Predicate<T> preCondition) {
+		this.preCondition = preCondition;
+		
+		return this;
+	}
+	
+	public Setter<T> post(Predicate<T> postCondition) {
+		this.postCondition = postCondition;
 		
 		return this;
 	}

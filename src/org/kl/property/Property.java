@@ -1,11 +1,19 @@
 package org.kl.property;
 
+import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
+
+import org.kl.property.error.PropertyException;
 
 public final class Property<T> {
 	private T value;
 	private UnaryOperator<T> setter;
 	private UnaryOperator<T> getter;
+	
+	private Predicate<T> preConditionSetter;
+	private Predicate<T> postConditionSetter;
+	private Predicate<T> preConditionGetter;
+	private Predicate<T> postConditionGetter;
 	
 	public Property(T value) {
 		this.value = value;
@@ -16,10 +24,18 @@ public final class Property<T> {
 	}
 	
 	public void set(T value) {
+		if (preConditionSetter != null && !preConditionSetter.test(value)) {
+			throw new PropertyException("Preconditions not satisfied in setter");
+		}
+		
 		if (setter != null) {
 			this.value = setter.apply(value);
 		} else {
 			this.value = value;
+		}
+		
+		if (postConditionSetter != null && !postConditionSetter.test(this.value)) {
+			throw new PropertyException("Postconditions not satisfied in setter");
 		}
 	}
 	
@@ -30,15 +46,51 @@ public final class Property<T> {
 	}
 	
 	public T get() {
-		if (getter != null) {
-			return getter.apply(value);
+		T result;
+		
+		if (preConditionGetter != null && !preConditionGetter.test(value)) {
+			throw new PropertyException("Preconditions not satisfied in getter");
 		}
 		
-		return value; 
+		if (getter != null) {
+			result = getter.apply(value);
+		} else {
+			result = value;
+		}
+		
+		if (postConditionGetter != null && !postConditionGetter.test(this.value)) {
+			throw new PropertyException("Postconditions not satisfied in getter");
+		}
+		
+		return result; 
 	}
 	
 	public Property<T> get(UnaryOperator<T> getter) {
 		this.getter = getter;
+		
+		return this;
+	}
+	
+	public Property<T> preSet(Predicate<T> preConditionSetter) {
+		this.preConditionSetter = preConditionSetter;
+		
+		return this;
+	}
+	
+	public Property<T> postSet(Predicate<T> postConditionSetter) {
+		this.postConditionSetter = postConditionSetter;
+		
+		return this;
+	}
+	
+	public Property<T> preGet(Predicate<T> preConditionGetter) {
+		this.preConditionGetter = preConditionGetter;
+		
+		return this;
+	}
+	
+	public Property<T> postGet(Predicate<T> postConditionGetter) {
+		this.postConditionGetter = postConditionGetter;
 		
 		return this;
 	}
