@@ -1,7 +1,11 @@
 package org.kl.property.primitive;
 
+import org.kl.property.lambda.BoolUnaryOperator;
+
 public final class BoolProperty {
 	private boolean value;
+	private BoolUnaryOperator setter;
+	private BoolUnaryOperator getter;
 	
 	public BoolProperty(boolean value) {
 		this.value = value;
@@ -12,11 +16,31 @@ public final class BoolProperty {
 	}
 	
 	public void set(boolean value) {
-		this.value = value;
+		if (setter != null) {
+			this.value = setter.applyAsBool(value);
+		} else {
+			this.value = value;
+		}
 	}
 	
-	public boolean get() { 
+	public BoolProperty set(BoolUnaryOperator setter) {
+		this.setter = setter;
+		
+		return this;
+	}
+	
+	public boolean get() {
+		if (getter != null) {
+			return getter.applyAsBool(value);
+		}
+		
 		return value; 
+	}
+	
+	public BoolProperty get(BoolUnaryOperator getter) {
+		this.getter = getter;
+		
+		return this;
 	}
 
 	@Override

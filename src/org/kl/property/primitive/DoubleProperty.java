@@ -1,7 +1,11 @@
 package org.kl.property.primitive;
 
+import java.util.function.DoubleUnaryOperator;
+
 public final class DoubleProperty {
 	private double value;
+	private DoubleUnaryOperator setter;
+	private DoubleUnaryOperator getter;
 	
 	public DoubleProperty(double value) {
 		this.value = value;
@@ -12,11 +16,31 @@ public final class DoubleProperty {
 	}
 	
 	public void set(double value) {
-		this.value = value;
+		if (setter != null) {
+			this.value = setter.applyAsDouble(value);
+		} else {
+			this.value = value;
+		}
 	}
 	
-	public double get() { 
+	public DoubleProperty set(DoubleUnaryOperator setter) {
+		this.setter = setter;
+		
+		return this;
+	}
+	
+	public double get() {
+		if (getter != null) {
+			return getter.applyAsDouble(value);
+		}
+		
 		return value; 
+	}
+	
+	public DoubleProperty get(DoubleUnaryOperator getter) {
+		this.getter = getter;
+		
+		return this;
 	}
 
 	@Override

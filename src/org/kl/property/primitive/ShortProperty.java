@@ -1,7 +1,11 @@
 package org.kl.property.primitive;
 
+import org.kl.property.lambda.ShortUnaryOperator;
+
 public final class ShortProperty {
 	private short value;
+	private ShortUnaryOperator setter;
+	private ShortUnaryOperator getter;
 	
 	public ShortProperty(short value) {
 		this.value = value;
@@ -12,11 +16,31 @@ public final class ShortProperty {
 	}
 	
 	public void set(short value) {
-		this.value = value;
+		if (setter != null) {
+			this.value = setter.applyAsShort(value);
+		} else {
+			this.value = value;
+		}
 	}
 	
-	public short get() { 
+	public ShortProperty set(ShortUnaryOperator setter) {
+		this.setter = setter;
+		
+		return this;
+	}
+	
+	public short get() {
+		if (getter != null) {
+			return getter.applyAsShort(value);
+		}
+		
 		return value; 
+	}
+	
+	public ShortProperty get(ShortUnaryOperator getter) {
+		this.getter = getter;
+		
+		return this;
 	}
 
 	@Override

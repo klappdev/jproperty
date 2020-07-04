@@ -1,7 +1,11 @@
 package org.kl.property.primitive;
 
+import org.kl.property.lambda.FloatUnaryOperator;
+
 public final class FloatProperty {
 	private float value;
+	private FloatUnaryOperator setter;
+	private FloatUnaryOperator getter;
 	
 	public FloatProperty(float value) {
 		this.value = value;
@@ -12,11 +16,31 @@ public final class FloatProperty {
 	}
 	
 	public void set(float value) {
-		this.value = value;
+		if (setter != null) {
+			this.value = setter.applyAsFloat(value);
+		} else {
+			this.value = value;
+		}
 	}
 	
-	public float get() { 
+	public FloatProperty set(FloatUnaryOperator setter) {
+		this.setter = setter;
+		
+		return this;
+	}
+	
+	public float get() {
+		if (getter != null) {
+			return getter.applyAsFloat(value);
+		}
+		
 		return value; 
+	}
+	
+	public FloatProperty get(FloatUnaryOperator getter) {
+		this.getter = getter;
+		
+		return this;
 	}
 
 	@Override

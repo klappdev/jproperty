@@ -1,7 +1,11 @@
 package org.kl.property.primitive;
 
+import java.util.function.IntUnaryOperator;
+
 public final class IntProperty {
 	private int value;
+	private IntUnaryOperator setter;
+	private IntUnaryOperator getter;
 	
 	public IntProperty(int value) {
 		this.value = value;
@@ -12,11 +16,31 @@ public final class IntProperty {
 	}
 	
 	public void set(int value) {
-		this.value = value;
+		if (setter != null) {
+			this.value = setter.applyAsInt(value);
+		} else {
+			this.value = value;
+		}
 	}
 	
-	public int get() { 
+	public IntProperty set(IntUnaryOperator setter) {
+		this.setter = setter;
+		
+		return this;
+	}
+	
+	public int get() {
+		if (getter != null) {
+			return getter.applyAsInt(value);
+		}
+		
 		return value; 
+	}
+	
+	public IntProperty get(IntUnaryOperator getter) {
+		this.getter = getter;
+		
+		return this;
 	}
 
 	@Override

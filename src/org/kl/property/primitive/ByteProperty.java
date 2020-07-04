@@ -1,7 +1,11 @@
 package org.kl.property.primitive;
 
+import org.kl.property.lambda.ByteUnaryOperator;
+
 public final class ByteProperty {
 	private byte value;
+	private ByteUnaryOperator setter;
+	private ByteUnaryOperator getter;
 	
 	public ByteProperty(byte value) {
 		this.value = value;
@@ -12,11 +16,31 @@ public final class ByteProperty {
 	}
 	
 	public void set(byte value) {
-		this.value = value;
+		if (setter != null) {
+			this.value = setter.applyAsByte(value);
+		} else {
+			this.value = value;
+		}
 	}
 	
-	public byte get() { 
+	public ByteProperty set(ByteUnaryOperator setter) {
+		this.setter = setter;
+		
+		return this;
+	}
+	
+	public byte get() {
+		if (getter != null) {
+			return getter.applyAsByte(value);
+		}
+		
 		return value; 
+	}
+	
+	public ByteProperty get(ByteUnaryOperator getter) {
+		this.getter = getter;
+		
+		return this;
 	}
 
 	@Override

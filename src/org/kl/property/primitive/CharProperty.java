@@ -1,7 +1,11 @@
 package org.kl.property.primitive;
 
+import org.kl.property.lambda.CharUnaryOperator;
+
 public final class CharProperty {
 	private char value;
+	private CharUnaryOperator setter;
+	private CharUnaryOperator getter;
 	
 	public CharProperty(char value) {
 		this.value = value;
@@ -12,11 +16,31 @@ public final class CharProperty {
 	}
 	
 	public void set(char value) {
-		this.value = value;
+		if (setter != null) {
+			this.value = setter.applyAsChar(value);
+		} else {
+			this.value = value;
+		}
 	}
 	
-	public char get() { 
+	public CharProperty set(CharUnaryOperator setter) {
+		this.setter = setter;
+		
+		return this;
+	}
+	
+	public char get() {
+		if (getter != null) {
+			return getter.applyAsChar(value);
+		}
+		
 		return value; 
+	}
+	
+	public CharProperty get(CharUnaryOperator getter) {
+		this.getter = getter;
+		
+		return this;
 	}
 
 	@Override

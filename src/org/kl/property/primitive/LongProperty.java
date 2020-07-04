@@ -1,7 +1,11 @@
 package org.kl.property.primitive;
 
+import java.util.function.LongUnaryOperator;
+
 public final class LongProperty {
 	private long value;
+	private LongUnaryOperator setter;
+	private LongUnaryOperator getter;
 	
 	public LongProperty(long value) {
 		this.value = value;
@@ -12,11 +16,31 @@ public final class LongProperty {
 	}
 	
 	public void set(long value) {
-		this.value = value;
+		if (setter != null) {
+			this.value = setter.applyAsLong(value);
+		} else {
+			this.value = value;
+		}
 	}
 	
-	public long get() { 
+	public LongProperty set(LongUnaryOperator setter) {
+		this.setter = setter;
+		
+		return this;
+	}
+	
+	public long get() {
+		if (getter != null) {
+			return getter.applyAsLong(value);
+		}
+		
 		return value; 
+	}
+	
+	public LongProperty get(LongUnaryOperator getter) {
+		this.getter = getter;
+		
+		return this;
 	}
 
 	@Override
