@@ -90,16 +90,16 @@ Also to verify the correctness of input and output data,could use preconditions 
 
    public class User {
 	public Getter<String> name = Getter.of("no_name")
-					      .pre(value -> !value.isEmpty());
-					      .post(value -> value.length() > 10);
+					   .pre(value -> !value.isEmpty())
+					   .post(value -> value.length() > 10)
 	                                   .get(value -> value.uppercase());
 	public IntSetter age = IntSetter.of(1)
-					      .pre(value -> value > 0);
-					      .post(value -> value > 5 && value < 15);	
-	                                   .set(value -> {
-	                                   	if (value < 1) return 1;
-	                                   	return value;  
-	                                   });
+					.pre(value -> value > 0)
+					.post(value -> value > 5 && value < 15)	
+	                                .set(value -> {
+	                                     if (value < 1) return 1;
+	                                     return value;  
+	                                });
 		
 	public Data() {}		
     }	    
